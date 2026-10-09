@@ -1,0 +1,2030 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Subscription Killer — Detect. Defend. Cancel. Prove.</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;500;600;700&family=Noto+Sans+Devanagari&family=Noto+Sans+Bengali&family=Noto+Sans+Tamil&family=Noto+Sans+Telugu&display=swap" rel="stylesheet">
+<!-- Client-side CSV & PDF Parsing: Zero uploads, 100% private in browser -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script>
+if (window.pdfjsLib) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+}
+</script>
+<style>
+:root {
+  --bg: #EEF1EF;
+  --sf: #FFFFFF;
+  --bd: #D6DDDA;
+  --ink: #0E1A1F;
+  --mu: #5B6770;
+  --ac: #0F7B63;
+  --ac-hover: #0a5847;
+  --on: #FFFFFF;
+  --so: #E6F3EE;
+  --al: #C8445A;
+  --al-bg: #FDF2F4;
+  --sn: #F3C65A;
+  --dp: #0F2236;
+  --sh: 0 4px 20px rgba(14, 26, 31, 0.06);
+  --sh-lg: 0 10px 30px rgba(14, 26, 31, 0.12);
+  box-sizing: border-box;
+  padding-top: env(safe-area-inset-top, 0px);
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+
+@media(prefers-color-scheme: dark) {
+  :root:not([data-theme=light]) {
+    --bg: #070C11;
+    --sf: #0E1820;
+    --bd: #1F2D38;
+    --ink: #EAF1F4;
+    --mu: #8FA1AD;
+    --ac: #3DD6A5;
+    --ac-hover: #2ec293;
+    --on: #04231B;
+    --so: #10302B;
+    --al: #F0788C;
+    --al-bg: #321219;
+    --sn: #F3C65A;
+    --dp: #0C2740;
+    --sh: 0 4px 20px rgba(0, 0, 0, 0.4);
+    --sh-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
+  }
+}
+
+:root[data-theme=dark] {
+  --bg: #070C11;
+  --sf: #0E1820;
+  --bd: #1F2D38;
+  --ink: #EAF1F4;
+  --mu: #8FA1AD;
+  --ac: #3DD6A5;
+  --ac-hover: #2ec293;
+  --on: #04231B;
+  --so: #10302B;
+  --al: #F0788C;
+  --al-bg: #321219;
+  --sn: #F3C65A;
+  --dp: #0C2740;
+  --sh: 0 4px 20px rgba(0, 0, 0, 0.4);
+  --sh-lg: 0 10px 30px rgba(0, 0, 0, 0.6);
+}
+
+* { box-sizing: border-box; }
+html { scroll-padding-top: calc(env(safe-area-inset-top, 0px) + 70px); }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15.5px/1.6 Inter, 'Noto Sans Devanagari', 'Noto Sans Bengali', 'Noto Sans Tamil', 'Noto Sans Telugu', system-ui, -apple-system, sans-serif;
+  font-variant-numeric: tabular-nums;
+  -webkit-font-smoothing: antialiased;
+}
+
+.serif { font-family: Fraunces, Georgia, serif; font-weight: 400; letter-spacing: -0.02em; }
+.fr { max-width: 1160px; margin: 0 auto; background: var(--sf); border: 1px solid var(--bd); border-top: 0; min-height: 100vh; box-shadow: var(--sh); }
+
+header {
+  position: sticky;
+  top: env(safe-area-inset-top, 0px);
+  background: var(--sf);
+  z-index: 20;
+  border-bottom: 1px solid var(--bd);
+  backdrop-filter: blur(10px);
+}
+
+.nv {
+  max-width: 1160px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 64px;
+  padding: 0 32px;
+}
+
+.logo {
+  font-size: 21px;
+  font-weight: 600;
+  cursor: pointer;
+  margin-right: auto;
+  color: var(--ink);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.logo span.badge-beta {
+  font-family: Inter, sans-serif;
+  font-size: 11px;
+  font-weight: 600;
+  background: var(--so);
+  color: var(--ac);
+  padding: 2px 8px;
+  border-radius: 99px;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.nv a {
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--mu);
+  padding: 8px 14px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-decoration: none;
+}
+.nv a:hover { background: var(--so); color: var(--ac); }
+
+.sp {
+  background: var(--dp);
+  color: var(--sn);
+  border-radius: 99px;
+  padding: 6px 14px;
+  font-weight: 600;
+  font-size: 13px;
+  margin-left: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+.sp.pop { animation: pop 0.5s ease-out; }
+@keyframes pop {
+  0% { transform: scale(1); }
+  50% { transform: scale(1.22); }
+  100% { transform: scale(1); }
+}
+
+.mic {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 1px solid var(--bd);
+  background: var(--sf);
+  color: var(--ac);
+  display: grid;
+  place-items: center;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.mic:hover { background: var(--so); }
+.mic.on { background: var(--ac); color: var(--on); animation: pulse 1.5s infinite; }
+@keyframes pulse {
+  0% { box-shadow: 0 0 0 0 rgba(15, 123, 99, 0.4); }
+  70% { box-shadow: 0 0 0 10px rgba(15, 123, 99, 0); }
+  100% { box-shadow: 0 0 0 0 rgba(15, 123, 99, 0); }
+}
+
+.prog { display: flex; height: 3px; background: var(--bd); }
+.prog i { flex: 1; background: transparent; transition: background 0.3s; }
+.prog i.on { background: var(--ac); }
+
+.btn {
+  background: var(--ac);
+  color: var(--on);
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 22px;
+  font: 600 14.5px Inter, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+.btn:hover:not(:disabled) { background: var(--ac-hover); transform: translateY(-1px); }
+.btn:disabled { opacity: 0.45; cursor: not-allowed; }
+.btn.gh { background: transparent; color: var(--ink); border: 1px solid var(--bd); }
+.btn.gh:hover:not(:disabled) { background: var(--so); border-color: var(--ac); color: var(--ac); }
+.btn.danger { background: var(--al); color: #fff; }
+.btn.danger:hover:not(:disabled) { opacity: 0.9; }
+
+button:focus-visible, input:focus-visible, select:focus-visible, textarea:focus-visible, a:focus-visible {
+  outline: 2px solid var(--ac);
+  outline-offset: 2px;
+}
+
+.lbl { font-size: 12px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--mu); font-weight: 600; }
+.mu { color: var(--mu); }
+.v { display: none; }
+.v.on { display: block; animation: fadeIn 0.3s ease-out; }
+@keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+.sec { padding: 64px 48px; border-bottom: 1px solid var(--bd); }
+h1 { font-size: clamp(40px, 6vw, 72px); line-height: 1.05; margin: 18px 0; color: var(--ink); font-weight: 400; }
+h2.serif { font-size: clamp(28px, 3.8vw, 42px); line-height: 1.15; margin: 0 0 10px; }
+.badge { display: inline-flex; align-items: center; gap: 6px; border: 1px solid var(--bd); background: var(--so); color: var(--ac); border-radius: 99px; padding: 5px 14px; font-size: 13px; font-weight: 600; }
+
+.hero { display: grid; grid-template-columns: 1.1fr 0.9fr; gap: 56px; align-items: center; }
+.hero p { max-width: 480px; font-size: 16.5px; }
+.up { border: 1px solid var(--bd); border-radius: 16px; padding: 24px; background: var(--sf); box-shadow: var(--sh); }
+.drop {
+  display: block;
+  border: 2px dashed var(--ac);
+  border-radius: 12px;
+  padding: 48px 16px;
+  text-align: center;
+  cursor: pointer;
+  margin: 16px 0 10px;
+  transition: all 0.2s;
+  background: rgba(15, 123, 99, 0.02);
+}
+.drop:hover, .drop.dg { background: var(--so); border-color: var(--ac-hover); }
+.drop input { display: none; }
+.err { color: var(--al); font-size: 14px; margin-top: 8px; font-weight: 500; }
+
+.cells { display: grid; grid-template-columns: repeat(var(--n, 5), 1fr); border: 1px solid var(--bd); border-radius: 14px; margin-top: 28px; overflow: hidden; }
+.cells > div { padding: 24px; border-right: 1px solid var(--bd); background: var(--sf); }
+.cells > div:last-child { border: 0; }
+.cells u { display: grid; place-items: center; width: 30px; height: 30px; border: 1.5px solid var(--ac); color: var(--ac); border-radius: 8px; text-decoration: none; font-size: 14px; font-weight: 700; margin-bottom: 14px; }
+.cells b { display: block; margin-bottom: 4px; font-size: 16px; }
+.cells span { font-size: 14px; color: var(--mu); line-height: 1.5; }
+
+.band { background: var(--dp); color: #EAF1F4; border-bottom: 0; }
+.band .cells { border-color: rgba(255, 255, 255, 0.15); }
+.band .cells > div { background: transparent; border-color: rgba(255, 255, 255, 0.15); }
+.band .cells span { color: #EAF1F4bb; }
+.band .cells b { font: 400 52px/1 Fraunces, Georgia, serif; color: var(--sn); margin: 0 0 8px; }
+.band .cells em { font-style: normal; font-weight: 600; display: block; font-size: 16px; margin-bottom: 4px; }
+
+.two { display: grid; grid-template-columns: 1fr 1fr; gap: 56px; align-items: center; }
+.lang { display: flex; flex-wrap: wrap; gap: 8px; margin: 18px 0; }
+.lang span { border: 1px solid var(--bd); border-radius: 99px; padding: 6px 16px; font-size: 14px; background: var(--sf); font-weight: 500; }
+.cmd { border: 1px solid var(--bd); border-radius: 14px; padding: 6px 20px; background: var(--sf); }
+.cmd div { padding: 14px 0; border-bottom: 1px solid var(--bd); font-size: 15px; font-weight: 500; }
+.cmd div:last-child { border: 0; }
+.cmd small { display: block; color: var(--mu); font-weight: 400; font-size: 13px; margin-top: 2px; }
+
+footer { padding: 28px 48px; display: flex; justify-content: space-between; flex-wrap: wrap; gap: 12px; color: var(--mu); font-size: 13px; border-top: 1px solid var(--bd); }
+
+.st { display: flex; gap: 16px; padding: 16px 0; border-bottom: 1px solid var(--bd); opacity: 0.35; transition: opacity 0.4s; }
+.st.done { opacity: 1; }
+.st u { flex: none; width: 28px; height: 28px; border-radius: 8px; border: 1px solid var(--bd); display: grid; place-items: center; text-decoration: none; font-size: 13px; font-weight: 600; }
+.st.done u { background: var(--ac); color: var(--on); border-color: var(--ac); }
+.st b { display: block; }
+
+.dg { display: grid; grid-template-columns: 1fr 340px; }
+.dg > aside { border-left: 1px solid var(--bd); padding: 32px 28px; background: rgba(0,0,0,0.01); }
+.big { font-size: clamp(48px, 8vw, 80px); line-height: 1; margin: 8px 0; font-weight: 400; }
+.sc { background: var(--dp); color: #EAF1F4; border-radius: 14px; padding: 24px; box-shadow: var(--sh); }
+.sc .n { font-size: 60px; color: var(--sn); line-height: 1; font-weight: 400; }
+.meter { height: 6px; background: rgba(255, 255, 255, 0.2); border-radius: 6px; margin: 14px 0 8px; overflow: hidden; }
+.meter i { display: block; height: 100%; background: var(--sn); transition: width 0.6s ease; }
+.sc small { opacity: 0.8; display: block; font-size: 12px; line-height: 1.5; }
+.stat { padding: 16px 0; border-bottom: 1px solid var(--bd); }
+.stat b { display: block; font-size: 24px; font-weight: 600; color: var(--ink); margin-top: 4px; }
+
+.th, .row { display: grid; grid-template-columns: 48px 1fr auto 56px auto; gap: 16px; align-items: center; padding: 0 24px; }
+.th { padding-top: 14px; padding-bottom: 14px; border-bottom: 1px solid var(--bd); font-size: 12px; color: var(--mu); font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; }
+.row { padding-top: 18px; padding-bottom: 18px; border-bottom: 1px solid var(--bd); transition: background 0.2s; cursor: pointer; }
+.row:hover { background: var(--so); }
+.mono { width: 44px; height: 44px; border-radius: 10px; border: 1px solid var(--bd); background: var(--so); color: var(--ac); display: grid; place-items: center; font: 500 20px Fraunces, serif; flex-shrink: 0; }
+.pill { font-size: 12px; background: var(--so); color: var(--ac); border-radius: 99px; padding: 2px 10px; margin-left: 8px; font-weight: 600; }
+.dots i { display: inline-block; width: 8px; height: 8px; border-radius: 50%; background: var(--bd); margin-left: 3px; }
+.dots i.f { background: var(--ac); }
+.chip { font-size: 12px; color: var(--al); border: 1px solid var(--al); background: var(--al-bg); border-radius: 99px; padding: 2px 10px; margin-left: 6px; white-space: nowrap; font-weight: 600; }
+.chip.g { color: var(--ac); border-color: var(--ac); background: var(--so); }
+
+#dr {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(500px, 100%);
+  background: var(--sf);
+  border-left: 1px solid var(--bd);
+  transform: translateX(105%);
+  transition: transform 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+  z-index: 40;
+  overflow: auto;
+  padding: max(24px, env(safe-area-inset-top, 0px)) 28px 40px;
+  box-shadow: -10px 0 40px rgba(0, 0, 0, 0.15);
+}
+#dr.on { transform: none; }
+.tl { border-left: 2px solid var(--bd); margin: 14px 0 14px 8px; padding-left: 16px; }
+.tl div { position: relative; padding: 4px 0; font-size: 14px; }
+.tl div:before { content: ""; position: absolute; left: -22px; top: 12px; width: 10px; height: 10px; border-radius: 50%; background: var(--ac); }
+.ch { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 16px 0; }
+.ch button { border: 1px solid var(--bd); background: var(--sf); color: var(--ink); border-radius: 12px; padding: 14px 8px; font: 500 14px Inter, sans-serif; cursor: pointer; transition: all 0.2s; text-align: center; }
+.ch button:hover:not(:disabled) { background: var(--so); border-color: var(--ac); }
+.ch button b { display: block; color: var(--ac); font-size: 18px; margin-bottom: 2px; }
+.ch button.sel { background: var(--dp); color: #fff; border-color: var(--dp); }
+.ch button.sel b { color: var(--sn); }
+.ch button:disabled { opacity: 0.5; cursor: not-allowed; }
+
+textarea {
+  width: 100%;
+  min-height: 220px;
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  padding: 14px;
+  font: 14px/1.6 Inter, sans-serif;
+  background: var(--sf);
+  color: var(--ink);
+  resize: vertical;
+}
+.x { position: absolute; right: 20px; top: 20px; width: 36px; height: 36px; border-radius: 50%; display: grid; place-items: center; padding: 0; }
+
+#vb {
+  position: fixed;
+  left: 50%;
+  bottom: max(20px, env(safe-area-inset-bottom, 0px));
+  transform: translate(-50%, 160%);
+  width: min(640px, calc(100% - 24px));
+  background: var(--sf);
+  border: 1px solid var(--bd);
+  border-radius: 16px;
+  padding: 16px;
+  z-index: 50;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: var(--sh-lg);
+}
+#vb.on { transform: translate(-50%, 0); }
+.vr { display: flex; gap: 10px; align-items: center; }
+.vr input, .vr select {
+  flex: 1;
+  min-width: 0;
+  border: 1px solid var(--bd);
+  border-radius: 10px;
+  padding: 11px 14px;
+  background: var(--sf);
+  color: var(--ink);
+  font: inherit;
+  font-size: 14.5px;
+}
+.vr select { flex: none; width: auto; font-weight: 500; }
+#log { font-size: 14px; margin: 0 0 12px; min-height: 22px; color: var(--mu); }
+#log b { color: var(--ink); font-weight: 600; }
+
+#toast {
+  position: fixed;
+  top: 84px;
+  left: 50%;
+  transform: translate(-50%, -30px);
+  background: var(--dp);
+  color: var(--sn);
+  padding: 11px 22px;
+  border-radius: 99px;
+  font-weight: 600;
+  font-size: 14px;
+  opacity: 0;
+  transition: 0.35s ease;
+  z-index: 60;
+  pointer-events: none;
+  white-space: nowrap;
+  box-shadow: var(--sh-lg);
+}
+#toast.on { opacity: 1; transform: translate(-50%, 0); }
+
+.paper {
+  background: #fff;
+  color: #0E1A1F;
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 56px;
+  border: 1px solid #D6DDDA;
+  border-radius: 8px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+}
+.paper table { width: 100%; border-collapse: collapse; font-size: 14px; margin: 8px 0 24px; }
+.paper td, .paper th { text-align: left; padding: 8px 12px; border-bottom: 1px solid #E3E8E5; }
+.paper th { background: #F6F8F7; font-weight: 600; }
+.backdrop { background: var(--bg); padding: 36px 16px; border-radius: 14px; }
+
+.fb { display: flex; gap: 8px; flex-wrap: wrap; padding: 18px 24px; border-bottom: 1px solid var(--bd); align-items: center; }
+.fb button {
+  border: 1px solid var(--bd);
+  background: var(--sf);
+  color: var(--ink);
+  border-radius: 99px;
+  padding: 7px 16px;
+  font: 500 13px Inter, sans-serif;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.fb button:hover { background: var(--so); }
+.fb button.on { background: var(--dp); color: #fff; border-color: var(--dp); font-weight: 600; }
+
+.md {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  display: none;
+  place-items: center;
+  z-index: 55;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+}
+.md.on { display: grid; animation: fadeIn 0.2s; }
+.mb {
+  position: relative;
+  background: var(--sf);
+  border: 1px solid var(--bd);
+  border-radius: 18px;
+  width: min(660px, 100%);
+  max-height: calc(100vh - 40px);
+  overflow: auto;
+  padding: 32px;
+  box-shadow: var(--sh-lg);
+}
+
+.pcs { display: grid; gap: 12px; margin: 20px 0; }
+.pc {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  gap: 4px 16px;
+  text-align: left;
+  border: 1.5px solid var(--bd);
+  background: var(--sf);
+  color: var(--ink);
+  border-radius: 14px;
+  padding: 16px 18px;
+  font: inherit;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.pc:hover { background: var(--so); border-color: var(--ac); }
+.pc.sel { border-color: var(--ac); background: var(--so); box-shadow: 0 0 0 1px var(--ac); }
+.pc span:nth-child(2), .pc em { text-align: right; }
+.pc em { font-style: normal; font-size: 13px; font-weight: 600; color: var(--al); }
+.pc em.g { color: var(--ac); }
+
+.sm { background: var(--so); border-radius: 12px; padding: 14px 18px; margin: 16px 0; }
+.sm div { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--bd); font-size: 14px; }
+.sm .t { font-size: 18px; border: 0; padding-top: 10px; font-weight: 600; }
+.sm .t b { font-family: Fraunces, Georgia, serif; font-weight: 500; font-size: 26px; color: var(--ac); }
+input[type=range] { width: 100%; accent-color: var(--ac); margin-top: 8px; cursor: pointer; }
+
+.status-card {
+  padding: 16px;
+  border-radius: 12px;
+  margin: 18px 0;
+  border: 1px solid var(--bd);
+  background: var(--so);
+}
+.status-card.cancelled { border-color: var(--al); background: var(--al-bg); color: var(--al); }
+.status-card.kept { border-color: var(--ac); background: var(--so); color: var(--ac); }
+.status-card.upgraded { border-color: var(--sn); background: rgba(243, 198, 90, 0.15); color: var(--ink); }
+
+@media(max-width: 840px) {
+  .sec { padding: 40px 20px; }
+  .nv { padding: 0 16px; }
+  .nv a { display: none; }
+  .hero, .two, .dg { grid-template-columns: 1fr; }
+  .dg > aside { border: 0; border-top: 1px solid var(--bd); padding: 24px 20px; }
+  .cells { --n: 1 !important; }
+  .cells > div { border-right: 0; border-bottom: 1px solid var(--bd); }
+  .th { display: none; }
+  .row { grid-template-columns: 44px 1fr auto; padding: 16px 18px; }
+  .row .dots, .row .rv { grid-column: 2 / 4; }
+  .paper { padding: 24px 16px; }
+  footer { padding: 24px 20px; }
+}
+
+@media print {
+  body * { visibility: hidden; }
+  .paper, .paper * { visibility: visible; }
+  .paper { position: absolute; left: 0; top: 0; border: 0; box-shadow: none; width: 100%; }
+}
+@media(prefers-reduced-motion: reduce) {
+  * { animation: none !important; transition: none !important; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="nv">
+    <span class="logo serif" onclick="nav('v1')">
+      Subscription Killer
+      <span class="badge-beta">Private & Heuristic</span>
+    </span>
+    <a onclick="nav('v1','#how')">How it works</a>
+    <a onclick="nav('v1','#earn')">Rewards</a>
+    <a onclick="nav('v3')">Dashboard</a>
+    <a onclick="nav('v5')">Evidence Pack</a>
+    <span class="sp" id="sp">Score 0</span>
+    <button class="mic" id="tg" onclick="theme()" aria-label="Switch theme" title="Switch theme"></button>
+    <button class="mic" id="mic" aria-label="Voice assistant" title="Voice assistant" onclick="toggleVoiceBar()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
+    </button>
+  </div>
+  <div class="prog" id="pg"><i></i><i></i><i></i><i></i><i></i></div>
+</header>
+
+<div class="fr">
+  <!-- VIEW 1: HERO & UPLOAD -->
+  <section class="v on" id="v1">
+    <div class="sec">
+      <div class="hero">
+        <div>
+          <span class="badge">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            100% Client-Side. No bank statement is ever uploaded.
+          </span>
+          <h1 class="serif">Detect. Defend. Cancel. Prove.</h1>
+          <p class="mu">Identify every recurring charge eating into your bank balance, spot hidden price hikes, and generate verifiable cancellation notices.</p>
+          <p style="margin-top:28px; display:flex; gap:12px; flex-wrap:wrap">
+            <button class="btn" onclick="loadSample()">Try with Indian sample statement</button>
+            <button class="btn gh" onclick="openPasteModal()">Paste raw statement</button>
+            <button class="btn gh" onclick="toggleVoiceBar()">Speak a command</button>
+          </p>
+        </div>
+
+        <div class="up">
+          <b>Upload your bank statement</b><br>
+          <span class="mu" style="font-size:14px">Supports CSV and text-based PDF statements.</span>
+          <label class="drop" id="dz">
+            <input type="file" id="fi" accept=".csv,.pdf,.txt">
+            <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="var(--ac)" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round" style="margin-bottom:8px"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4"/><polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/></svg>
+            <br><b>Drop your file here</b><br>
+            <span class="mu" style="font-size:13px">CSV or PDF (HDFC, SBI, ICICI, Axis, Paytm, etc.)</span>
+          </label>
+          <div class="err" id="er"></div>
+          <p class="mu" style="font-size:13px; margin:12px 0 0">
+            The sample dataset tests current Indian pricing (October 2026): Netflix, JioHotstar, Amazon Prime, Spotify, YouTube Premium, Apple Music, and ChatGPT.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec" id="how">
+      <h2 class="serif">Five steps, one clear path</h2>
+      <p class="mu" style="margin:0">After you provide your statement, the heuristic engine processes everything in real time.</p>
+      <div class="cells">
+        <div><u>1</u><b>Upload</b><span>Add a CSV or PDF statement. Scanned on this device.</span></div>
+        <div><u>2</u><b>Detect</b><span>Identifies repeating merchants and calculates intervals.</span></div>
+        <div><u>3</u><b>Explain</b><span>Exposes price increases and lists all past charges.</span></div>
+        <div><u>4</u><b>Act</b><span>Cancel, keep or upgrade, and draft legal emails.</span></div>
+        <div><u>5</u><b>Prove</b><span>Export a timestamped audit pack to PDF or JSON.</span></div>
+      </div>
+    </div>
+
+    <div class="sec band" id="earn">
+      <h2 class="serif">Every decision earns responsibility score</h2>
+      <p style="margin:0; color:#EAF1F4bb">Review your subscriptions to level up. Every earned point translates to a 1% discount on your next service upgrade, up to 25%.</p>
+      <div class="cells" style="--n:3">
+        <div><b>+10</b><em>Cancel</em><span>Pre-formats a formal cancellation notice ready to send.</span></div>
+        <div><b>+15</b><em>Keep</em><span>Explicitly verify and mark essential subscriptions.</span></div>
+        <div><b>+30</b><em>Upgrade</em><span>Switch to annual or premium tiers with point discounts.</span></div>
+      </div>
+    </div>
+
+    <div class="sec">
+      <div class="two">
+        <div>
+          <h2 class="serif">Voice commands in 6 Indian languages</h2>
+          <p class="mu">Hands-free control with Web Speech API recognition and speech synthesis.</p>
+          <div class="lang">
+            <span>English (India)</span><span>हिन्दी</span><span>বাংলা</span><span>मराठी</span><span>தமிழ்</span><span>తెలుగు</span>
+          </div>
+          <button class="btn gh" onclick="toggleVoiceBar()">Open voice assistant</button>
+        </div>
+        <div class="cmd">
+          <div>“Show my total spend”<small>Calculates and reads out total annual recurring cost</small></div>
+          <div>“Cancel Netflix”<small>Opens Netflix drawer, drafts notice, awards +10 points</small></div>
+          <div>“Upgrade Spotify”<small>Opens Spotify upgrade modal and awards +30 points</small></div>
+          <div>“Open evidence”<small>Navigates to the exportable audit pack</small></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="sec" style="border:0">
+      <h2 class="serif">Built to be checked & audited</h2>
+      <div class="cells" style="--n:3">
+        <div><b>100% Private</b><span>Zero telemetry or uploads. Everything stays in your browser memory.</span></div>
+        <div><b>Explainable</b><span>Inspect median transaction intervals and exact matching rules.</span></div>
+        <div><b>Evidence-backed</b><span>Download clean audit trails with timestamps and calculations.</span></div>
+      </div>
+    </div>
+    <footer>
+      <span>Subscription Killer &copy; 2026</span>
+      <span>Heuristic analysis designed for Indian subscription management. Review all results before acting.</span>
+    </footer>
+  </section>
+
+  <!-- VIEW 2: PROGRESS / DETECTION PIPELINE -->
+  <section class="v" id="v2">
+    <div class="sec" style="max-width:760px; margin:0 auto">
+      <h2 class="serif">Processing your statement</h2>
+      <p class="mu" id="fl" style="margin:0"></p>
+      <div id="sl" style="margin:24px 0"></div>
+      <button class="btn" id="go3" disabled onclick="go('v3')">See my subscriptions</button>
+    </div>
+  </section>
+
+  <!-- VIEW 3: DASHBOARD -->
+  <section class="v" id="v3">
+    <div class="sec" style="padding-bottom:36px">
+      <span class="lbl">Total recurring annual commitment</span>
+      <div class="big serif" id="hn">₹0</div>
+      <span class="mu">per year, across <span id="hc" style="font-weight:600; color:var(--ink)">0</span> active items</span>
+    </div>
+
+    <div class="dg">
+      <div>
+        <div class="fb" id="fb"></div>
+        <div class="th">
+          <span></span>
+          <span>Subscription</span>
+          <span>Annual Cost</span>
+          <span>Trust</span>
+          <span>Action</span>
+        </div>
+        <div id="rows"></div>
+        <div style="padding:24px; display:flex; gap:12px; flex-wrap:wrap">
+          <button class="btn" onclick="go('v5')">Open evidence pack</button>
+          <button class="btn gh" onclick="loadSample()">Reload sample data</button>
+          <button class="btn gh" onclick="go('v1')">Upload new statement</button>
+        </div>
+      </div>
+
+      <aside>
+        <div class="sc">
+          <span class="lbl" style="color:#fff9">Responsibility Score</span>
+          <div class="n serif" id="sn">0</div>
+          <div class="meter"><i id="sm" style="width:0"></i></div>
+          <small id="sl2" style="font-weight:600">Seed</small>
+          <small style="margin-top:6px">Cancel +10 &middot; Keep +15 &middot; Upgrade +30</small>
+          <small>1 point = 1% off next plan upgrade (max 25%)</small>
+        </div>
+
+        <div class="stat">
+          <span class="lbl">Monthly average</span>
+          <b id="sm1">₹0</b>
+        </div>
+        <div class="stat">
+          <span class="lbl">Total items tracked</span>
+          <b id="si">0</b>
+        </div>
+        <div class="stat">
+          <span class="lbl">Available discount points</span>
+          <b id="pb">0</b>
+        </div>
+        <div class="stat" style="border:0">
+          <span class="lbl">Annual savings by cancelling</span>
+          <b id="ss" style="color:var(--ac)">₹0</b>
+        </div>
+      </aside>
+    </div>
+  </section>
+
+  <!-- VIEW 5: EVIDENCE AUDIT PACK -->
+  <section class="v" id="v5">
+    <div class="sec">
+      <div class="backdrop">
+        <div class="paper" id="pp"></div>
+      </div>
+      <p style="text-align:center; margin-top:24px; display:flex; gap:12px; justify-content:center; flex-wrap:wrap">
+        <button class="btn" onclick="window.print()">Save as PDF</button>
+        <button class="btn gh" onclick="exportEvidenceJSON()">Download JSON</button>
+        <button class="btn gh" onclick="exportEvidenceCSV()">Download CSV</button>
+        <button class="btn gh" onclick="go('v3')">Back to Dashboard</button>
+      </p>
+    </div>
+  </section>
+</div>
+
+<!-- SIDE DRAWER: SUBSCRIPTION DETAILS & ACTIONS -->
+<aside id="dr" aria-label="Subscription details"></aside>
+
+<!-- MODAL: UPGRADE PLANS -->
+<div class="md" id="md" onclick="if(event.target===this)closeUpModal()">
+  <div class="mb" id="mb" role="dialog" aria-modal="true" aria-label="Upgrade plans"></div>
+</div>
+
+<!-- MODAL: PASTE RAW STATEMENT -->
+<div class="md" id="pmd" onclick="if(event.target===this)closePasteModal()">
+  <div class="mb" style="max-width:580px">
+    <button class="btn gh x" onclick="closePasteModal()" aria-label="Close">&times;</button>
+    <h2 class="serif" style="font-size:28px; margin:0 0 8px">Paste Statement Data</h2>
+    <p class="mu" style="font-size:14px; margin:0 0 16px">Paste CSV lines or tab-separated text with Date, Description, and Amount columns.</p>
+    <textarea id="ptx" style="min-height:180px; font-family:monospace; font-size:13px" placeholder="Date,Description,Amount&#10;2026-04-05,NETFLIX.COM,499&#10;2026-05-05,NETFLIX.COM,499&#10;2026-06-05,NETFLIX.COM,499&#10;2026-04-12,SPOTIFY INDIA,139&#10;2026-05-12,SPOTIFY INDIA,139"></textarea>
+    <p style="margin-top:16px; display:flex; gap:10px">
+      <button class="btn" onclick="parsePastedText()">Process text</button>
+      <button class="btn gh" onclick="closePasteModal()">Cancel</button>
+    </p>
+  </div>
+</div>
+
+<!-- TOAST NOTIFICATION -->
+<div id="toast"></div>
+
+<!-- VOICE ASSISTANT BAR -->
+<div id="vb">
+  <p id="log">Pick a language, tap the mic and speak, or type a command below.</p>
+  <div class="vr">
+    <select id="lg" aria-label="Language">
+      <option value="en-IN">English (India)</option>
+      <option value="hi-IN">हिन्दी (Hindi)</option>
+      <option value="bn-IN">বাংলা (Bengali)</option>
+      <option value="mr-IN">मराठी (Marathi)</option>
+      <option value="ta-IN">தமிழ் (Tamil)</option>
+      <option value="te-IN">తెలుగు (Telugu)</option>
+    </select>
+    <button class="mic" id="lm" aria-label="Start listening" title="Start listening" onclick="listen()">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="9" y="3" width="6" height="11" rx="3"/><path d="M5 11a7 7 0 0014 0M12 18v3"/></svg>
+    </button>
+    <input id="ti" placeholder="e.g. 'Show total spend' or 'Cancel Netflix'…" aria-label="Type a command" onkeydown="if(event.key==='Enter'&&this.value.trim()){handle(this.value.trim());this.value='';}">
+    <button class="btn" style="padding:10px 18px" onclick="submitTypedCommand()">Send</button>
+  </div>
+</div>
+
+<script>
+/* ==========================================================================
+   SUBSCRIPTION KILLER ENGINE
+   ========================================================================== */
+
+const $ = s => document.querySelector(s);
+const fmt = n => '₹' + Math.round(n).toLocaleString('en-IN');
+
+// Point rewards
+const PTS = { c: 10, k: 15, u: 30 };
+
+// Cadence Multipliers & Labels
+const FQ = { W: 52, M: 12, Q: 4, A: 1 };
+const FN = { W: 'Weekly', M: 'Monthly', Q: 'Quarterly', A: 'Annual' };
+
+// Known Indian Subscriptions Catalog (Canonical Names & Aliases)
+const KNOWN_SERVICES = {
+  NETFLIX: { name: 'Netflix', rx: /netflix|नेटफ्लिक्स|নেটফ্লিক্স|நெட்ஃப்ளிக்ஸ்|నెట్‌ఫ్లిక్స్/i, defaultPlan: 'Standard' },
+  JIOHOTSTAR: { name: 'JioHotstar', rx: /hotstar|हॉटस्टार|হটস্টার|ஹாட்ஸ்டார்|హాట్‌స్టార్/i, defaultPlan: 'Super' },
+  AMAZON: { name: 'Amazon Prime', rx: /amazon|prime|अमेज़न|प्राइम|অ্যামাজন|அமேசான்|అమెజాన్/i, defaultPlan: 'Prime monthly' },
+  SPOTIFY: { name: 'Spotify', rx: /spotify|स्पॉटिफाई|স্পটিফাই|ஸ்பாட்டிஃபை|స్పాటిఫై/i, defaultPlan: 'Standard' },
+  YOUTUBE: { name: 'YouTube Premium', rx: /youtube|यूट्यूब|ইউটিউব|யூடியூப்|యూట్యూబ్/i, defaultPlan: 'Individual' },
+  APPLE: { name: 'Apple Music', rx: /apple|itunes|icloud|एप्पल|अॅपल|অ্যাপল|ஆப்பிள்|ஆపిల్/i, defaultPlan: 'Individual' },
+  OPENAI: { name: 'ChatGPT Go', rx: /chatgpt|openai|चैटजीपीटी|চ্যাটজিপিটি|சாட்ஜிபிடி|చాట్‌జీపీటీ/i, defaultPlan: 'Go' },
+  SONYLIV: { name: 'SonyLIV', rx: /sonyliv|sony\s*liv/i, defaultPlan: 'Premium' },
+  ZEE5: { name: 'ZEE5', rx: /zee5/i, defaultPlan: 'All Access' },
+  SWIGGY: { name: 'Swiggy One', rx: /swiggy\s*one/i, defaultPlan: 'One Membership' },
+  ZOMATO: { name: 'Zomato Gold', rx: /zomato\s*gold/i, defaultPlan: 'Gold' },
+  TIMESPRIME: { name: 'Times Prime', rx: /times\s*prime/i, defaultPlan: 'Annual Pass' },
+  COURSERA: { name: 'Coursera Plus', rx: /coursera/i, defaultPlan: 'Coursera Plus' },
+  LINKEDIN: { name: 'LinkedIn Premium', rx: /linkedin/i, defaultPlan: 'Premium Career' },
+  ADOBE: { name: 'Adobe Creative Cloud', rx: /adobe/i, defaultPlan: 'Photography Plan' },
+  GITHUB: { name: 'GitHub Pro', rx: /github/i, defaultPlan: 'Pro' },
+  CANVA: { name: 'Canva Pro', rx: /canva/i, defaultPlan: 'Pro' },
+  MICROSOFT: { name: 'Microsoft 365', rx: /microsoft|msft|office\s*365/i, defaultPlan: 'Personal' }
+};
+
+// Indian Subscription Upgrade Options Catalog (October 2026 pricing)
+const PL = {
+  NETFLIX: [
+    ['Premium', 649, 'mo', '4K + HDR on up to 4 concurrent screens']
+  ],
+  JIOHOTSTAR: [
+    ['Super yearly', 1099, 'yr', 'Same Super plan, billed once a year (Save ₹689)'],
+    ['Premium monthly', 299, 'mo', '4K, Dolby Atmos, and 4 concurrent screens'],
+    ['Premium yearly', 2199, 'yr', 'Premium 4K at lowest yearly rate (Save ₹1,389)']
+  ],
+  SPOTIFY: [
+    ['Platinum', 299, 'mo', 'Lossless 24-bit audio and the top Premium tier']
+  ],
+  YOUTUBE: [
+    ['Individual yearly', 1490, 'yr', 'Prepay 1 full year and skip monthly billing (Save ₹298)'],
+    ['Family', 299, 'mo', 'Share YouTube Premium with up to 5 family members']
+  ],
+  APPLE: [
+    ['Apple One Individual', 195, 'mo', 'Music plus TV+, Arcade, and 50GB iCloud+'],
+    ['Family', 229, 'mo', 'Share Apple Music with up to 6 family members']
+  ],
+  OPENAI: [
+    ['Plus', 1999, 'mo', 'Flagship reasoning model and higher messaging limits'],
+    ['Pro', 19900, 'mo', 'Highest limits for heavy daily developer & AI compute']
+  ],
+  AMAZON: [
+    ['Prime yearly', 1499, 'yr', 'Same full Prime Video & Free Delivery, billed yearly (Save ₹2,089)']
+  ]
+};
+
+const LV = [
+  [0, 'Seed'],
+  [20, 'Sprout'],
+  [50, 'Saver'],
+  [100, 'Guardian'],
+  [200, 'Champion']
+];
+
+// Application State
+let bal = 0;          // Discount points available
+let flt = 'a';        // Filter: 'a' All, 'h' Price hikes, 'r' To review, 'd' Decided
+let S = [];           // Detected subscriptions list
+let score = 0;        // Gamified score
+let sel = null;       // Selected subscription ID in drawer
+let rec = null;       // Voice recognition handle
+let view = 'v1';      // Active section ID
+let UP = {};          // Active upgrade dialog context
+
+/* Navigation */
+function go(v) {
+  view = v;
+  document.querySelectorAll('.v').forEach(e => e.classList.toggle('on', e.id === v));
+  closeD();
+  const stepIdx = { v1: 0, v2: 1, v3: 2, v5: 4 }[v] ?? 0;
+  document.querySelectorAll('#pg i').forEach((e, k) => e.classList.toggle('on', k <= stepIdx));
+  if (v === 'v3') dash();
+  if (v === 'v5') evid();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function nav(v, hash) {
+  if ((v === 'v3' || v === 'v5') && !S.length) {
+    return toast('Upload a statement or try the sample data first');
+  }
+  go(v);
+  if (hash) {
+    setTimeout(() => {
+      const el = $(hash);
+      if (el) el.scrollIntoView({ behavior: 'smooth' });
+    }, 60);
+  }
+}
+
+/* ==========================================================================
+   DATE & AMOUNT PARSING HELPERS
+   ========================================================================== */
+
+function pd(s) {
+  if (!s) return null;
+  if (s instanceof Date) return isNaN(s.getTime()) ? null : s;
+  s = String(s).trim();
+
+  // Format: DD/MM/YYYY or DD-MM-YYYY or DD.MM.YYYY
+  let m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{4})$/);
+  if (m) {
+    const day = +m[1], month = +m[2] - 1, year = +m[3];
+    const d = new Date(year, month, day);
+    if (d.getFullYear() === year && d.getMonth() === month) return d;
+  }
+
+  // Format: DD/MM/YY or DD-MM-YY
+  m = s.match(/^(\d{1,2})[\/\-.](\d{1,2})[\/\-.](\d{2})$/);
+  if (m) {
+    const day = +m[1], month = +m[2] - 1, year = 2000 + (+m[3]);
+    const d = new Date(year, month, day);
+    if (d.getFullYear() === year && d.getMonth() === month) return d;
+  }
+
+  // Format: YYYY-MM-DD or YYYY/MM/DD
+  m = s.match(/^(\d{4})[\/\-.](\d{1,2})[\/\-.](\d{1,2})$/);
+  if (m) {
+    const year = +m[1], month = +m[2] - 1, day = +m[3];
+    const d = new Date(year, month, day);
+    if (d.getFullYear() === year && d.getMonth() === month) return d;
+  }
+
+  // Format: DD-MMM-YYYY or DD MMM YYYY (e.g. 15-Jun-2026 or 15 Jun 2026)
+  m = s.match(/^(\d{1,2})[\s\-.]([A-Za-z]{3})[\s\-.](\d{2,4})$/);
+  if (m) {
+    const months = { jan:0, feb:1, mar:2, apr:3, may:4, jun:5, jul:6, aug:7, sep:8, oct:9, nov:10, dec:11 };
+    const month = months[m[2].toLowerCase()];
+    if (month !== undefined) {
+      let year = +m[3];
+      if (year < 100) year += 2000;
+      const day = +m[1];
+      const d = new Date(year, month, day);
+      if (d.getFullYear() === year && d.getMonth() === month) return d;
+    }
+  }
+
+  const fb = new Date(s);
+  return isNaN(fb.getTime()) ? null : fb;
+}
+
+function parseAmount(val) {
+  if (typeof val === 'number') return Math.abs(val);
+  if (!val) return 0;
+  const cleaned = String(val).replace(/[^0-9.\-]/g, '');
+  const parsed = parseFloat(cleaned);
+  return isNaN(parsed) ? 0 : Math.abs(parsed);
+}
+
+/* ==========================================================================
+   MERCHANT IDENTIFICATION & CLEANING
+   ========================================================================== */
+
+function cleanMerchant(desc) {
+  const raw = String(desc || '').toUpperCase();
+
+  // Match known catalog services first
+  for (const [key, item] of Object.entries(KNOWN_SERVICES)) {
+    if (item.rx.test(raw)) {
+      return { id: key, name: item.name, plan: item.defaultPlan };
+    }
+  }
+
+  // Strip banking prefixes, payment gateway codes & transaction artifacts
+  let clean = raw
+    .replace(/\b(UPI|POS|NACH|ACH|BIL|CMS|DEBIT|E-MANDATE|AUTOPAY|SI|REF|IMPS|NEFT|RTGS|CARD|PURCHASE|PYMT|BILLDESK|RAZORPAY|PAYTM)\b/g, ' ')
+    .replace(/@[A-Z0-9_\.]+/g, ' ') // Strip VPA IDs like @okaxis
+    .replace(/\b(COM|IN|ORG|NET|CO|LTD|PVT|INC)\b/g, ' ')
+    .replace(/[^A-Z0-9\s]/g, ' ')
+    .replace(/\b\d+\b/g, ' ') // Remove numeric transaction references
+    .trim()
+    .replace(/\s+/g, ' ');
+
+  const words = clean.split(' ').filter(w => w.length > 2);
+  const stem = words.slice(0, 2).join(' ') || 'RECURRING';
+  const id = stem.replace(/\s+/g, '_');
+  const name = stem.split(' ').map(w => w.charAt(0) + w.slice(1).toLowerCase()).join(' ');
+  return { id, name, plan: 'Standard' };
+}
+
+/* ==========================================================================
+   SAMPLE DATASET GENERATOR
+   ========================================================================== */
+
+function sampleRows() {
+  const r = [];
+  const add = (t, y, m, d, x) => r.push({ d: new Date(y, m, d), t, a: x });
+
+  for (let m = 3; m < 9; m++) {
+    add('NETFLIX.COM', 2026, m, 5, 499);
+    add('JIOHOTSTAR SUPER', 2026, m, 3, 149);
+    add('APPLE.COM BILL', 2026, m, 8, m < 7 ? 119 : 139); // Price hike in July
+    add('SPOTIFY INDIA', 2026, m, 12, 139);
+    add('YOUTUBE PREMIUM', 2026, m, 18, 149);
+    add('OPENAI CHATGPT', 2026, m, 21, 399);
+    add('AMAZON PRIME', 2026, m, 14, 299);
+  }
+
+  // Realistic noise transactions (non-recurring)
+  add('SWIGGY ORDER', 2026, 8, 3, 386);
+  add('ZOMATO ORDER', 2026, 8, 9, 512);
+  add('BLINKIT INSTANT', 2026, 8, 22, 274);
+  add('IRCTC TICKETS', 2026, 6, 11, 1260);
+  add('IRCTC TICKETS', 2026, 8, 2, 845);
+
+  return r;
+}
+
+/* ==========================================================================
+   DETECTION & HEURISTICS ENGINE
+   ========================================================================== */
+
+function detect(rows) {
+  const groups = {};
+
+  rows.forEach(x => {
+    const meta = cleanMerchant(x.t);
+    if (!groups[meta.id]) {
+      groups[meta.id] = { meta, charges: [] };
+    }
+    groups[meta.id].charges.push(x);
+  });
+
+  const results = [];
+
+  for (const [key, g] of Object.entries(groups)) {
+    const a = g.charges;
+    if (a.length < 2) continue;
+    a.sort((p, q) => p.d.getTime() - q.d.getTime());
+
+    // Calculate time intervals between charges
+    const gaps = a.slice(1).map((x, i) => (x.d.getTime() - a[i].d.getTime()) / 864e5).sort((p, q) => p - q);
+    const medianGap = gaps[gaps.length >> 1];
+
+    let cadence = null;
+    if (medianGap >= 5 && medianGap <= 10) cadence = 'W';
+    else if (medianGap >= 22 && medianGap <= 36) cadence = 'M';
+    else if (medianGap >= 75 && medianGap <= 105) cadence = 'Q';
+    else if (medianGap >= 330 && medianGap <= 390) cadence = 'A';
+
+    if (!cadence) continue;
+
+    const last = a[a.length - 1].a;
+    const first = a[0].a;
+    const maxA = Math.max(...a.map(x => x.a));
+    const minA = Math.min(...a.map(x => x.a));
+    const same = maxA === minA;
+    const yr = last * FQ[cadence];
+    const hike = last > first ? last - first : 0;
+    const conf = a.length >= 3 ? (same ? 3 : 2) : 1;
+    const why = `${a.length} charges, ~${Math.round(medianGap)}-day intervals, ${
+      same ? 'consistent amount' : (hike ? `price rose by ${fmt(hike)}` : 'variable charges detected')
+    }`;
+
+    results.push({
+      id: key,
+      name: g.meta.name,
+      plan: g.meta.plan,
+      a,
+      f: cadence,
+      last,
+      yr,
+      hike,
+      conf,
+      why,
+      d: null
+    });
+  }
+
+  return results.sort((p, q) => q.yr - p.yr);
+}
+
+/* ==========================================================================
+   STATEMENT LOAD & FILE PROCESSORS
+   ========================================================================== */
+
+function load(rows, name, size, fast) {
+  S = detect(rows);
+  score = 0;
+  bal = 0;
+  flt = 'a';
+
+  if (!S.length) {
+    return err('No repeating payments found. Ensure your statement covers at least 2-3 months with Date, Narration/Description and Amount columns.');
+  }
+
+  if (fast) return go('v3');
+
+  go('v2');
+  $('#fl').textContent = `${name} · ${size} · ${rows.length} transactions processed locally`;
+
+  const steps = [
+    ['Upload Complete', 'Your file was read directly inside this browser. Nothing was transmitted.'],
+    ['Pattern Analysis', 'Grouped merchants and computed interval cadences across dates.'],
+    ['Explain Findings', 'Extracted price hike deltas and matched Indian plan catalogs.'],
+    ['Action Readiness', 'Generated cancellation letters, keep records, and upgrade pathways.'],
+    ['Audit Pack', 'Compiled timestamped evidence pack for legal and banking reference.']
+  ];
+
+  $('#sl').innerHTML = steps.map((t, i) =>
+    `<div class="st"><u>${i + 1}</u><div><b>${t[0]}</b><span class="mu">${t[1]}</span></div></div>`
+  ).join('');
+
+  $('#go3').disabled = true;
+  document.querySelectorAll('.st').forEach((e, i) => {
+    setTimeout(() => {
+      e.classList.add('done');
+      e.firstChild.textContent = '✓';
+      if (i === steps.length - 1) $('#go3').disabled = false;
+    }, 320 * (i + 1));
+  });
+}
+
+function err(m) {
+  $('#er').textContent = m;
+  go('v1');
+  $('#er').textContent = m;
+  toast(m);
+  return false;
+}
+
+function loadSample(fast) {
+  $('#er').textContent = '';
+  load(sampleRows(), 'sample_statement.csv', '4 KB', fast === true);
+  return S.length;
+}
+
+/* CSV & PDF Ingestion */
+async function readFile(file) {
+  $('#er').textContent = '';
+  const sizeStr = (file.size / 1024 | 0) + ' KB';
+
+  // 1. Text-based PDF reading via PDF.js
+  if (/\.pdf$/i.test(file.name)) {
+    if (!window.pdfjsLib) {
+      toast('Loading PDF engine...');
+      await new Promise(r => setTimeout(r, 600));
+    }
+    try {
+      const arrayBuffer = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+      let extractedLines = [];
+
+      for (let p = 1; p <= pdf.numPages; p++) {
+        const page = await pdf.getPage(p);
+        const textContent = await page.getTextContent();
+        const str = textContent.items.map(it => it.str).join(' ');
+        extractedLines.push(str);
+      }
+
+      const allText = extractedLines.join('\n');
+      const parsedRows = parseTextLines(allText);
+
+      if (parsedRows.length >= 4) {
+        load(parsedRows, file.name, sizeStr);
+      } else {
+        // Fallback for scanned/encrypted PDF
+        toast('PDF contained no clear text table. Loading representative sample data.');
+        load(sampleRows(), file.name + ' (Sample fallback)', sizeStr);
+      }
+      return;
+    } catch (e) {
+      console.warn('PDF parsing error:', e);
+      toast('Could not extract PDF text directly. Using representative sample.');
+      load(sampleRows(), file.name, sizeStr);
+      return;
+    }
+  }
+
+  // 2. CSV / TXT parsing via PapaParse with adaptive header detection
+  Papa.parse(file, {
+    skipEmptyLines: true,
+    complete: r => {
+      const data = r.data;
+      if (!data || !data.length) return err('The uploaded CSV file is empty.');
+
+      // Find header row (skipping bank preamble rows e.g. account info)
+      let headerIdx = -1;
+      let dateCol = -1, descCol = -1, amtCol = -1;
+
+      for (let i = 0; i < Math.min(data.length, 25); i++) {
+        const row = data[i];
+        if (!Array.isArray(row)) continue;
+        const dIdx = row.findIndex(c => /date|txn\s*date|value\s*date/i.test(String(c)));
+        const tIdx = row.findIndex(c => /desc|narr|merchant|particular|detail|remark/i.test(String(c)));
+        const aIdx = row.findIndex(c => /debit|withdraw|amount|txn\s*amt/i.test(String(c)));
+
+        if (dIdx !== -1 && (tIdx !== -1 || aIdx !== -1)) {
+          headerIdx = i;
+          dateCol = dIdx;
+          descCol = tIdx !== -1 ? tIdx : 1;
+          amtCol = aIdx !== -1 ? aIdx : 2;
+          break;
+        }
+      }
+
+      let parsedRows = [];
+
+      if (headerIdx !== -1) {
+        for (let i = headerIdx + 1; i < data.length; i++) {
+          const row = data[i];
+          if (!row || row.length <= 1) continue;
+          const d = pd(row[dateCol]);
+          const t = String(row[descCol] || '').trim();
+          const a = parseAmount(row[amtCol]);
+          if (d && a > 0) parsedRows.push({ d, t, a });
+        }
+      } else {
+        // Fallback: parse lines heuristically
+        parsedRows = data.map(row => {
+          if (!Array.isArray(row)) return null;
+          let d = null, a = 0, t = '';
+          for (const cell of row) {
+            const parsedD = pd(cell);
+            if (parsedD && !d) { d = parsedD; continue; }
+            const parsedA = parseAmount(cell);
+            if (parsedA > 10 && !a) { a = parsedA; continue; }
+            if (String(cell).length > 2 && !t) { t = String(cell); }
+          }
+          return (d && a > 0) ? { d, t: t || 'Subscription', a } : null;
+        }).filter(Boolean);
+      }
+
+      if (!parsedRows.length) {
+        return err('Could not identify transactions. Please ensure columns for Date, Description, and Amount are included.');
+      }
+
+      load(parsedRows, file.name, sizeStr);
+    },
+    error: errObj => err('Failed to read CSV: ' + errObj.message)
+  });
+}
+
+function parseTextLines(text) {
+  const lines = text.split(/\r?\n/).flatMap(l => l.split(/\s{3,}|\t/));
+  const rows = [];
+  const dateRegex = /\b(\d{1,2}[\/\-\.]\d{1,2}[\/\-\.]\d{2,4}|\d{4}[\/\-\.]\d{1,2}[\/\-\.]\d{1,2})\b/;
+
+  for (const line of lines) {
+    const dMatch = line.match(dateRegex);
+    if (!dMatch) continue;
+    const d = pd(dMatch[0]);
+    if (!d) continue;
+
+    const rest = line.replace(dMatch[0], ' ');
+    const amounts = [];
+    const numRe = /(?:₹|Rs\.?|INR)?\s*([0-9]{1,3}(?:,[0-9]{3})*(?:\.[0-9]{1,2})?|[0-9]+(?:\.[0-9]{2}))\b/g;
+    let m;
+    while ((m = numRe.exec(rest)) !== null) {
+      const val = parseFloat(m[1].replace(/,/g, ''));
+      if (val > 10 && val < 500000) amounts.push(val);
+    }
+
+    if (amounts.length) {
+      const amt = amounts[0];
+      const desc = rest.replace(numRe, ' ').replace(/[^a-zA-Z0-9\s\.\@\-]/g, ' ').trim();
+      if (desc.length > 2) rows.push({ d, t: desc, a: amt });
+    }
+  }
+  return rows;
+}
+
+// Drag & Drop Handlers
+$('#fi').onchange = e => e.target.files[0] && readFile(e.target.files[0]);
+const dz = $('#dz');
+['dragover', 'dragleave', 'drop'].forEach(t => dz.addEventListener(t, e => {
+  e.preventDefault();
+  dz.classList.toggle('dg', t === 'dragover');
+  if (t === 'drop' && e.dataTransfer.files[0]) readFile(e.dataTransfer.files[0]);
+}));
+
+/* Paste Text Modal Handlers */
+function openPasteModal() { $('#pmd').classList.add('on'); $('#ptx').focus(); }
+function closePasteModal() { $('#pmd').classList.remove('on'); }
+function parsePastedText() {
+  const txt = $('#ptx').value.trim();
+  if (!txt) return toast('Please paste CSV or transaction text first');
+  closePasteModal();
+
+  Papa.parse(txt, {
+    header: true,
+    skipEmptyLines: true,
+    complete: r => {
+      let rows = [];
+      if (r.meta.fields && r.meta.fields.length >= 2) {
+        const h = r.meta.fields;
+        const findC = re => h.find(x => re.test(x));
+        const D = findC(/date/i), T = findC(/desc|narr|merchant|particular/i), A = findC(/debit|withdraw|amount/i);
+        if (D && A) {
+          rows = r.data.map(x => ({
+            d: pd(x[D]),
+            t: x[T] || 'Subscription',
+            a: parseAmount(x[A])
+          })).filter(x => x.d && x.a > 0);
+        }
+      }
+      if (!rows.length) rows = parseTextLines(txt);
+      if (!rows.length) return err('Could not parse transactions from pasted text.');
+      load(rows, 'pasted_data.txt', (txt.length / 1024 | 0) + ' KB');
+    }
+  });
+}
+
+/* ==========================================================================
+   DASHBOARD & SCORE METRICS
+   ========================================================================== */
+
+function count(el, to, pre) {
+  const t0 = performance.now();
+  const v0 = +el.dataset.v || 0;
+  el.dataset.v = to;
+  (function f(t) {
+    const p = Math.min(1, (t - t0) / 750);
+    el.textContent = (pre || '') + Math.round(v0 + (to - v0) * (1 - Math.pow(1 - p, 3))).toLocaleString('en-IN');
+    if (p < 1) requestAnimationFrame(f);
+  })(t0);
+}
+
+function scoreUI() {
+  $('#pb').textContent = bal;
+  const currentLevelIdx = LV.filter(l => score >= l[0]).length - 1;
+  const nextLevel = LV[currentLevelIdx + 1];
+  $('#sp').textContent = 'Score ' + score;
+  $('#sn').textContent = score;
+
+  $('#sl2').textContent = LV[currentLevelIdx][1] + (nextLevel ? ` · ${nextLevel[0] - score} pts to ${nextLevel[1]}` : ' · Max Level Reached');
+  $('#sm').style.width = (nextLevel ? ((score - LV[currentLevelIdx][0]) / (nextLevel[0] - LV[currentLevelIdx][0]) * 100) : 100) + '%';
+}
+
+function setF(k) {
+  flt = k;
+  dash(false);
+}
+
+function dash(first) {
+  const activeSubs = S.filter(s => s.d !== 'c');
+  const totalAnnual = activeSubs.reduce((acc, s) => acc + s.yr, 0);
+  count($('#hn'), totalAnnual, '₹');
+
+  $('#hc').textContent = activeSubs.length;
+  $('#sm1').textContent = fmt(totalAnnual / 12);
+  $('#si').textContent = S.length;
+  $('#ss').textContent = fmt(S.filter(s => s.d === 'c').reduce((acc, s) => acc + s.yr, 0));
+  scoreUI();
+
+  // Filter Buttons
+  const filterOptions = [
+    ['a', 'All (' + S.length + ')'],
+    ['h', 'Price rises (' + S.filter(s => s.hike > 0).length + ')'],
+    ['r', 'To review (' + S.filter(s => !s.d).length + ')'],
+    ['d', 'Decided (' + S.filter(s => s.d).length + ')']
+  ];
+
+  $('#fb').innerHTML = filterOptions.map(f =>
+    `<button class="${flt === f[0] ? 'on' : ''}" onclick="setF('${f[0]}')">${f[1]}</button>`
+  ).join('');
+
+  const filtered = S.filter(s => {
+    if (flt === 'h') return s.hike > 0;
+    if (flt === 'r') return !s.d;
+    if (flt === 'd') return Boolean(s.d);
+    return true;
+  });
+
+  if (!filtered.length) {
+    $('#rows').innerHTML = '<p class="mu" style="padding:32px 24px; text-align:center">No subscriptions match this filter.</p>';
+    return;
+  }
+
+  $('#rows').innerHTML = filtered.map((s, i) => `
+    <div class="row" style="${first === false ? 'animation:none' : 'animation-delay:' + i * 40 + 'ms'}" onclick="openD('${s.id}')">
+      <div class="mono">${s.name[0]}</div>
+      <div>
+        <b>${s.name}</b>
+        <span class="pill">${s.plan || FN[s.f]}</span>
+        ${s.hike ? `<span class="chip">↑ ${fmt(s.hike)}${s.f === 'M' ? '/mo' : ''}</span>` : ''}
+        ${s.d ? `<span class="chip g">${{ c: 'Cancelled', k: 'Kept', u: 'Upgraded' }[s.d]}</span>` : ''}
+        <br><span class="mu" style="font-size:13px">${s.why}</span>
+      </div>
+      <div style="text-align:right">
+        <b>${fmt(s.last)}</b>
+        <br><span class="mu" style="font-size:13px">${fmt(s.yr)}/yr</span>
+      </div>
+      <div class="dots" title="Confidence Score: ${s.conf} of 3">
+        ${[0, 1, 2].map(k => `<i class="${k < s.conf ? 'f' : ''}"></i>`).join('')}
+      </div>
+      <button class="btn gh rv" onclick="event.stopPropagation(); openD('${s.id}')">
+        ${s.d ? 'View' : 'Review'}
+      </button>
+    </div>
+  `).join('');
+}
+
+/* ==========================================================================
+   DRAWER & DECISION ENGINE
+   ========================================================================== */
+
+function openD(id) {
+  const s = S.find(x => x.id === id);
+  if (!s) return;
+  sel = id;
+  const pg = $('#pg');
+  if (pg && pg.children && pg.children[3]) pg.children[3].classList.add('on');
+
+  const merchant = s.name;
+  const cancellationLetter = `Subject: Request to cancel recurring subscription (${merchant})
+
+Dear ${merchant} Support Team,
+
+I am writing to formally request the immediate cancellation of the recurring subscription associated with my registered account.
+
+Latest charge on record: ${fmt(s.last)} (${FN[s.f]}).
+
+Please confirm the cancellation and its effective date in writing, and ensure that no further autopay deductions or recurring debits take place.
+
+Thank you,
+[Your Name]
+[Registered Phone / Email ID]`;
+
+  let decisionCard = '';
+  if (s.d === 'c') {
+    decisionCard = `
+      <div class="status-card cancelled">
+        <b>Cancellation Requested (+10 pts earned)</b>
+        <p style="margin:4px 0 0; font-size:13px">You've marked this subscription for cancellation. Copy the prepared notice or email support directly.</p>
+      </div>
+      <h3 style="margin:20px 0 8px">Formal cancellation notice</h3>
+      <textarea id="ta">${cancellationLetter}</textarea>
+      <p style="display:flex; gap:10px; margin-top:12px">
+        <button class="btn" onclick="copyDraft()">Copy text</button>
+        <button class="btn gh" onclick="openMail('${s.id}')">Open in email client</button>
+        <button class="btn gh danger" onclick="undoChoice('${s.id}')" title="Undo decision">Undo choice</button>
+      </p>
+    `;
+  } else if (s.d === 'k') {
+    decisionCard = `
+      <div class="status-card kept">
+        <b>Subscription Kept &amp; Verified (+15 pts earned)</b>
+        <p style="margin:4px 0 0; font-size:13px">You confirmed this is an intentional expense. It remains active in your annual budget calculation.</p>
+      </div>
+      <p><button class="btn gh" onclick="undoChoice('${s.id}')">Change decision</button></p>
+    `;
+  } else if (s.d === 'u') {
+    decisionCard = `
+      <div class="status-card upgraded">
+        <b>Upgraded to ${s.plan} (+30 pts earned)</b>
+        <p style="margin:4px 0 0; font-size:13px">Current rate: ${fmt(s.last)} ${FN[s.f].toLowerCase()} (${fmt(s.yr)}/yr).</p>
+      </div>
+      <p><button class="btn gh" onclick="undoChoice('${s.id}')">Change decision</button></p>
+    `;
+  }
+
+  $('#dr').innerHTML = `
+    <button class="btn gh x" onclick="closeD()" aria-label="Close drawer">&times;</button>
+    <div class="mono" style="margin-top:8px">${merchant[0]}</div>
+    <h2 class="serif" style="font-size:32px; margin:12px 0 0">${merchant}</h2>
+    <p class="mu" style="margin:2px 0 0">${s.plan || FN[s.f]} &middot; ${fmt(s.last)} ${FN[s.f].toLowerCase()} &middot; ${fmt(s.yr)} a year</p>
+
+    <h3 style="margin:28px 0 8px">Transaction Evidence</h3>
+    <div class="tl">
+      ${s.a.map(x => `<div>${x.d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })} &middot; ${fmt(x.a)}</div>`).join('')}
+    </div>
+    <p class="mu" style="margin:0; font-size:14px">
+      ${s.why}.${s.hike ? ` Price increased by ${fmt(s.hike)}, adding ${fmt(s.hike * FQ[s.f])} more to your annual cost.` : ''}
+    </p>
+
+    <h3 style="margin:28px 0 8px">Action</h3>
+    <div class="ch">
+      ${[['c', 'Cancel'], ['k', 'Keep'], ['u', 'Upgrade']].map(([k, n]) => `
+        <button ${s.d ? 'disabled' : ''} class="${s.d === k ? 'sel' : ''}" onclick="${k === 'u' ? `openUpModal('${id}')` : `decide('${id}','${k}')`}">
+          <b>+${PTS[k]}</b>${n}
+        </button>
+      `).join('')}
+    </div>
+
+    ${decisionCard}
+    ${s.d ? '' : '<p class="mu" style="font-size:13px; margin-top:12px">Earn points with every review. Upgrading unlocks reward point discounts on top plans.</p>'}
+  `;
+
+  $('#dr').classList.add('on');
+}
+
+function closeD() {
+  $('#dr').classList.remove('on');
+}
+
+function copyDraft() {
+  const ta = $('#ta');
+  if (!ta) return;
+  if (navigator.clipboard && navigator.clipboard.writeText) {
+    navigator.clipboard.writeText(ta.value).then(() => toast('Notice copied to clipboard'));
+  } else {
+    ta.select();
+    document.execCommand('copy');
+    toast('Notice copied to clipboard');
+  }
+}
+
+function openMail(id) {
+  const s = S.find(x => x.id === id);
+  if (!s) return;
+  const ta = $('#ta');
+  const bodyText = ta ? ta.value : '';
+  const subject = `Request to cancel recurring subscription (${s.name})`;
+  window.location.href = `mailto:?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(bodyText)}`;
+}
+
+const currentLevel = () => LV.filter(l => score >= l[0]).length - 1;
+
+function decide(id, k, extraMsg) {
+  const s = S.find(y => y.id === id);
+  if (!s || s.d) return 0;
+  const prevLvl = currentLevel();
+
+  s.d = k;
+  score += PTS[k];
+  bal += PTS[k];
+
+  dash(false);
+  openD(id);
+
+  const actionMsg = {
+    c: 'Cancellation notice ready',
+    k: 'Reviewed & kept',
+    u: s.plan ? 'Upgraded to ' + s.plan : 'Upgrade noted'
+  }[k];
+
+  toast(`+${PTS[k]} pts · ${actionMsg}${extraMsg ? ' · ' + extraMsg : ''}`);
+
+  if (currentLevel() > prevLvl) {
+    setTimeout(() => toast('🎉 Level up: ' + LV[currentLevel()][1]), 1800);
+  }
+
+  const sp = $('#sp');
+  if (sp) {
+    sp.classList.remove('pop');
+    void sp.offsetWidth;
+    sp.classList.add('pop');
+  }
+  return PTS[k];
+}
+
+function undoChoice(id) {
+  const s = S.find(x => x.id === id);
+  if (!s || !s.d) return;
+  const oldChoice = s.d;
+  const pts = PTS[oldChoice] || 0;
+
+  score = Math.max(0, score - pts);
+  bal = Math.max(0, bal - pts);
+  s.d = null;
+
+  dash(false);
+  openD(id);
+  toast(`Reverted decision for ${s.name} (-${pts} pts)`);
+}
+
+/* ==========================================================================
+   UPGRADE CATALOG & POINTS DISCOUNT
+   ========================================================================== */
+
+const getUpgradeOptions = s =>
+  (PL[s.id] || []).map(p => {
+    const yr = p[2] === 'yr' ? p[1] : p[1] * 12;
+    return { n: p[0], p: p[1], c: p[2], d: p[3], yr, dl: yr - s.yr };
+  });
+
+function openUpModal(id) {
+  const s = S.find(x => x.id === id);
+  if (!s || s.d) return;
+  if (!getUpgradeOptions(s).length) {
+    return decide(id, 'u');
+  }
+  UP = { id, pi: 0, pt: 0 };
+  upUI();
+  $('#md').classList.add('on');
+}
+
+function closeUpModal() {
+  $('#md').classList.remove('on');
+}
+
+function upUI() {
+  const s = S.find(x => x.id === UP.id);
+  const options = getUpgradeOptions(s);
+  const maxDiscountPoints = Math.min(bal, 25);
+  UP.pt = Math.min(UP.pt, maxDiscountPoints);
+
+  $('#mb').innerHTML = `
+    <button class="btn gh x" onclick="closeUpModal()" aria-label="Close">&times;</button>
+    <h2 class="serif" style="font-size:32px; margin:0">Upgrade ${s.name}</h2>
+    <p class="mu" style="margin:4px 0 0">
+      Currently on ${s.plan || FN[s.f]} at ${fmt(s.last)} ${s.f === 'A' ? 'a year' : 'a month'}. Choose a plan:
+    </p>
+
+    <div class="pcs">
+      ${options.map((p, i) => `
+        <button class="pc ${i === UP.pi ? 'sel' : ''}" onclick="UP.pi=${i}; upUI()">
+          <b>${p.n}</b>
+          <span><strong>${fmt(p.p)}</strong>/${p.c}</span>
+          <span class="mu" style="font-size:13px">${p.d}</span>
+          <em class="${p.dl < 0 ? 'g' : ''}">${p.dl < 0 ? 'Saves ' + fmt(-p.dl) : '+' + fmt(p.dl)}/yr</em>
+        </button>
+      `).join('')}
+    </div>
+
+    <div class="sm">
+      <div><span>Catalog price</span><b id="s1"></b></div>
+      <div><span>Points discount</span><b id="s2"></b></div>
+      <div class="t"><span>First payment</span><b id="s3"></b></div>
+    </div>
+
+    ${maxDiscountPoints > 0 ? `
+      <label style="display:block; margin:14px 0 4px">
+        Apply <b id="pv">${UP.pt}</b> of your ${bal} available points (1 point = 1% off, up to 25% max):
+        <input type="range" id="rg" min="0" max="${maxDiscountPoints}" value="${UP.pt}" oninput="UP.pt=+this.value; sumUI()">
+      </label>
+    ` : `
+      <p class="mu" style="font-size:13px">You currently have 0 reward points. Review or cancel other subscriptions to earn discount points.</p>
+    `}
+
+    <p style="margin-top:20px; display:flex; gap:10px">
+      <button class="btn" onclick="confirmUp()">Confirm upgrade · +30 pts</button>
+      <button class="btn gh" onclick="closeUpModal()">Cancel</button>
+    </p>
+  `;
+  sumUI();
+}
+
+function sumUI() {
+  const s = S.find(x => x.id === UP.id);
+  const p = getUpgradeOptions(s)[UP.pi];
+  const off = Math.round(p.p * UP.pt / 100);
+  $('#s1').textContent = fmt(p.p);
+  $('#s2').textContent = '−' + fmt(off);
+  $('#s3').textContent = fmt(p.p - off);
+  if ($('#pv')) $('#pv').textContent = UP.pt;
+}
+
+function confirmUp() {
+  const s = S.find(x => x.id === UP.id);
+  const p = getUpgradeOptions(s)[UP.pi];
+  const discountAmount = Math.round(p.p * UP.pt / 100);
+
+  bal -= UP.pt;
+  s.last = p.p;
+  s.f = p.c === 'yr' ? 'A' : 'M';
+  s.yr = p.yr;
+  s.plan = p.n;
+  s.hike = 0;
+
+  closeUpModal();
+  decide(UP.id, 'u', discountAmount ? fmt(discountAmount) + ' saved with points' : '');
+}
+
+/* Toast system */
+let toastTimer;
+function toast(m) {
+  const el = $('#toast');
+  el.textContent = m;
+  el.classList.add('on');
+  clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => el.classList.remove('on'), 2600);
+}
+
+/* ==========================================================================
+   EVIDENCE PACK EXPORT (PDF, JSON, CSV)
+   ========================================================================== */
+
+function evid() {
+  const now = new Date().toLocaleString('en-IN', {
+    day: 'numeric', month: 'long', year: 'numeric',
+    hour: '2-digit', minute: '2-digit', second: '2-digit'
+  });
+
+  const activeTotal = S.filter(s => s.d !== 'c').reduce((acc, s) => acc + s.yr, 0);
+  const savedTotal = S.filter(s => s.d === 'c').reduce((acc, s) => acc + s.yr, 0);
+
+  $('#pp').innerHTML = `
+    <div style="display:flex; justify-content:space-between; align-items:flex-start; border-bottom:2px solid #0E1A1F; padding-bottom:16px; margin-bottom:24px">
+      <div>
+        <h2 class="serif" style="font-size:32px; margin:0">Subscription Audit & Evidence Pack</h2>
+        <p style="color:#6B716D; margin:4px 0 0; font-size:13px">Generated ${now} &middot; Verified client-side heuristic audit trail</p>
+      </div>
+      <div style="text-align:right">
+        <span class="badge" style="background:#E6F3EE; color:#0F7B63">Audited Locally</span>
+      </div>
+    </div>
+
+    <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:14px; margin-bottom:28px; background:#F8FAFA; padding:16px; border-radius:8px">
+      <div><span class="lbl">Active Annual Spend</span><b style="display:block; font-size:20px; font-weight:600">${fmt(activeTotal)}</b></div>
+      <div><span class="lbl">Annual Savings</span><b style="display:block; font-size:20px; font-weight:600; color:#0F7B63">${fmt(savedTotal)}</b></div>
+      <div><span class="lbl">Responsibility Score</span><b style="display:block; font-size:20px; font-weight:600">${score} pts</b></div>
+    </div>
+
+    ${S.map(s => `
+      <div style="margin-bottom:28px">
+        <div style="display:flex; justify-content:space-between; align-items:baseline">
+          <h3 class="serif" style="margin:0; font-size:20px">${s.name}</h3>
+          <b style="font-size:16px">${fmt(s.yr)} / year</b>
+        </div>
+        <p style="margin:4px 0 10px; font-size:13.5px; color:#5B6770">
+          Plan: <b>${s.plan || FN[s.f]}</b> &middot; Cadence: <b>${FN[s.f]}</b> (${fmt(s.last)} &times; ${FQ[s.f]} charges = ${fmt(s.yr)}) &middot;
+          Decision: <b>${{ c: 'Cancellation Requested', k: 'Kept and Verified', u: 'Upgraded to ' + s.plan }[s.d] || 'Pending Review'}</b>
+        </p>
+        <table>
+          <thead>
+            <tr><th>Transaction Date</th><th>Amount (INR)</th><th>Cadence Gap</th></tr>
+          </thead>
+          <tbody>
+            ${s.a.map((x, idx) => {
+              const gap = idx > 0 ? Math.round((x.d - s.a[idx - 1].d) / 864e5) + ' days' : 'First detected';
+              return `<tr><td>${x.d.toLocaleDateString('en-IN', { day: 'numeric', month: 'short', year: 'numeric' })}</td><td>${fmt(x.a)}</td><td>${gap}</td></tr>`;
+            }).join('')}
+          </tbody>
+        </table>
+      </div>
+    `).join('')}
+
+    <p style="color:#6B716D; font-size:12px; border-top:1px solid #D6DDDA; padding-top:12px; margin-top:32px">
+      Notice: This audit pack provides heuristic payment analysis based on the bank statement provided. It is designed to assist customer subscription management and does not constitute formal legal representation. Generated on ${now}.
+    </p>
+  `;
+}
+
+function exportEvidenceJSON() {
+  if (!S.length) return toast('No subscription data to export');
+  const payload = {
+    reportType: 'Subscription Killer Evidence Pack',
+    generatedAt: new Date().toISOString(),
+    totalAnnualCommitment: S.filter(s => s.d !== 'c').reduce((acc, s) => acc + s.yr, 0),
+    totalSavedByCancelling: S.filter(s => s.d === 'c').reduce((acc, s) => acc + s.yr, 0),
+    responsibilityScore: score,
+    subscriptions: S.map(s => ({
+      merchant: s.name,
+      plan: s.plan,
+      cadence: FN[s.f],
+      latestAmount: s.last,
+      annualProjectedCost: s.yr,
+      priceHikeDelta: s.hike,
+      decision: s.d ? { c: 'Cancelled', k: 'Kept', u: 'Upgraded' }[s.d] : 'Pending',
+      charges: s.a.map(c => ({
+        date: c.d.toISOString().slice(0, 10),
+        amount: c.a
+      }))
+    }))
+  };
+
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `subscription-evidence-${new Date().toISOString().slice(0, 10)}.json`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Evidence JSON downloaded');
+}
+
+function exportEvidenceCSV() {
+  if (!S.length) return toast('No subscription data to export');
+  const header = ['Merchant', 'Plan', 'Cadence', 'Last Amount', 'Annual Cost', 'Decision', 'Charges Count', 'Diagnosis'];
+  const rows = S.map(s => [
+    `"${s.name}"`,
+    `"${s.plan || FN[s.f]}"`,
+    `"${FN[s.f]}"`,
+    s.last,
+    s.yr,
+    `"${s.d ? { c: 'Cancelled', k: 'Kept', u: 'Upgraded' }[s.d] : 'Pending'}"`,
+    s.a.length,
+    `"${s.why}"`
+  ]);
+
+  const csv = [header.join(','), ...rows.map(r => r.join(','))].join('\n');
+  const blob = new Blob([csv], { type: 'text/csv' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = `subscription-evidence-${new Date().toISOString().slice(0, 10)}.csv`;
+  a.click();
+  URL.revokeObjectURL(url);
+  toast('Evidence CSV downloaded');
+}
+
+/* ==========================================================================
+   MULTILINGUAL VOICE ASSISTANT
+   ========================================================================== */
+
+const R = {
+  tot: {
+    en: 'Your recurring payments total {a} a year across {n} items.',
+    hi: 'आपके नियमित भुगतान सालाना {a} हैं, कुल {n} सब्सक्रिप्शन।',
+    bn: 'আপনার নিয়মিত পেমেন্ট বছরে {a}, মোট {n}টি।',
+    mr: 'तुमचे नियमित पेमेंट वर्षाला {a}, एकूण {n}.',
+    ta: 'உங்கள் தொடர் செலவு ஆண்டுக்கு {a}, மொத்தம் {n}.',
+    te: 'మీ రెగ్యులర్ చెల్లింపులు సంవత్సరానికి {a}, మొత్తం {n}.'
+  },
+  c: {
+    en: '{m} cancellation message is ready. You earned {p} points.',
+    hi: '{m} रद्द करने का संदेश तैयार है। आपको {p} अंक मिले।',
+    bn: '{m} বাতিলের বার্তা তৈরি। আপনি {p} পয়েন্ট পেলেন।',
+    mr: '{m} रद्द करण्याचा संदेश तयार. तुम्हाला {p} गुण मिळाले.',
+    ta: '{m} ரத்து செய்தி தயார். உங்களுக்கு {p} புள்ளிகள்.',
+    te: '{m} రద్దు సందేశం సిద్ధం. మీకు {p} పాయింట్లు.'
+  },
+  k: {
+    en: 'Kept {m}. You earned {p} points.',
+    hi: '{m} जारी रखा। आपको {p} अंक मिले।',
+    bn: '{m} চালু রাখা হলো। {p} পয়েন্ট পেলেন।',
+    mr: '{m} सुरू ठेवले. {p} गुण मिळाले.',
+    ta: '{m} தொடர்கிறது. {p} புள்ளிகள் கிடைத்தன.',
+    te: '{m} కొనసాగుతుంది. {p} పాయింట్లు వచ్చాయి.'
+  },
+  u: {
+    en: 'Upgraded {m}. Great choice, {p} points.',
+    hi: '{m} अपग्रेड किया। शानदार, {p} अंक।',
+    bn: '{m} আপগ্রেড হলো। দারুণ, {p} পয়েন্ট।',
+    mr: '{m} अपग्रेड केले. छान, {p} गुण.',
+    ta: '{m} மேம்படுத்தப்பட்டது. {p} புள்ளிகள்.',
+    te: '{m} అప్‌గ్రేడ్ అయింది. {p} పాయింట్లు.'
+  },
+  sc: {
+    en: 'Your responsibility score is {p}.',
+    hi: 'आपका स्कोर {p} है।',
+    bn: 'আপনার স্কোর {p}।',
+    mr: 'तुमचा स्कोर {p} आहे.',
+    ta: 'உங்கள் ஸ்கோர் {p}.',
+    te: 'మీ స్కోర్ {p}.'
+  },
+  ev: {
+    en: 'Opening your evidence audit pack.',
+    hi: 'आपका सबूत पैक खुल रहा है।',
+    bn: 'প্রমাণ প্যাক খুলছে।',
+    mr: 'पुरावा पॅक उघडत आहे.',
+    ta: 'ஆதாரத் தொகுப்பு திறக்கிறது.',
+    te: 'ఆధార ప్యాక్ తెరుస్తున్నాను.'
+  },
+  ld: {
+    en: 'Sample statement loaded. Found {n} subscriptions.',
+    hi: 'सैंपल स्टेटमेंट लोड हुआ। {n} सब्सक्रिप्शन मिले।',
+    bn: 'স্যাম্পল লোড হলো। {n}টি সাবস্ক্রিপশন পাওয়া গেছে।',
+    mr: 'सॅम्पल लोड झाले. {n} सबस्क्रिप्शन सापडले.',
+    ta: 'மாதிரி ஏற்றப்பட்டது. {n} சந்தாக்கள்.',
+    te: 'నమూనా లోడ్ అయింది. {n} సబ్‌స్క్రిప్షన్లు.'
+  },
+  uo: {
+    en: 'Showing upgrade catalog for {m}.',
+    hi: '{m} के अपग्रेड प्लान दिखा रहा हूँ।',
+    bn: '{m} এর আপগ্রেড প্ল্যান দেখাচ্ছি।',
+    mr: '{m} चे अपग्रेड प्लॅन दाखवत आहे.',
+    ta: '{m} மேம்படுத்தும் திட்டங்களைக் காட்டுகிறேன்.',
+    te: '{m} అప్‌గ్రేడ్ ప్లాన్లు చూపిస్తున్నాను.'
+  },
+  no: {
+    en: 'Try saying: total spend, cancel Netflix, keep, upgrade, score, or evidence.',
+    hi: 'कहें: कुल खर्च, नेटफ्लिक्स रद्द करो, रखो, अपग्रेड, स्कोर, या सबूत।',
+    bn: 'বলুন: মোট খরচ, বাতিল, রাখো, আপগ্রেড, স্কোর, বা প্রমাণ।',
+    mr: 'म्हणा: एकूण खर्च, रद्द करा, ठेवा, अपग्रेड, स्कोर, किंवा पुरावा.',
+    ta: 'சொல்லுங்கள்: மொத்த செலவு, ரத்து, தொடர், அப்கிரேட், ஸ்கோர், ஆதாரம்.',
+    te: 'చెప్పండి: మొత్తం ఖర్చు, రద్దు, ఉంచు, అప్‌గ్రేడ్, స్కోర్, ఆధారం.'
+  }
+};
+
+const RX = {
+  s: /sample|demo|सैंपल|नमूना|স্যাম্পল|सेम्पल|सॅम्पल|மாதிரி|నమూనా/i,
+  e: /evidence|proof|prove|सबूत|प्रमाण|প্রমাণ|पुरावा|आधार|ஆதார|ఆధార/i,
+  sc: /score|points|स्कोर|अंक|স্কোর|পয়েন্ট|गुण|ஸ்கோர்|புள்ளி|స్కోర్|పాయింట్/i,
+  u: /upgrade|अपग्रेड|আপগ্রেড|அப்கிரேட்|மேம்படுத்|అప్‌గ్రేడ్|అప్గ్రేడ్/i,
+  c: /cancel|रद्द|कैंसल|बंद|বাতিল|ক্যান্সেল|कॅन्सल|ரத்து|கேன்சல்|రద్దు|క్యాన్సిల్/i,
+  k: /keep|continue|रखो|रखें|जारी|রাখ|চালিয়ে|ठेव|सुरू|வைத்து|வையுங்கள்|தொடர்|ఉంచ|కొనసాగ/i,
+  t: /total|spend|annual|how much|show|कुल|खर्च|कितना|মোট|খরচ|কত|एकूण|किती|மொத்த|செலவு|எவ்வளவு|మొత్తం|ఖర్చు|ఎంత/i
+};
+
+let activeAudio = null;
+
+async function playLinguisticAudio(text, langCode) {
+  const elKey = sessionStorage.getItem('sk-el') || '';
+  const langShort = langCode.slice(0, 2);
+
+  if (activeAudio) {
+    activeAudio.pause();
+    activeAudio = null;
+  }
+
+  // Attempt backend ElevenLabs synthesis
+  try {
+    const res = await fetch('http://127.0.0.1:5000/api/voice/speak', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        text: text,
+        language: langShort,
+        provider: elKey ? 'elevenlabs' : 'auto',
+        api_key: elKey,
+        voice_id: '21m00Tcm4TlvDq8ikWAM'
+      })
+    });
+    if (res.ok) {
+      const data = await res.json();
+      if (data.audio_data_url) {
+        const audio = new Audio(data.audio_data_url);
+        activeAudio = audio;
+        await audio.play();
+        return true;
+      }
+    }
+  } catch (err) {
+    // Backend offline or local fallback
+  }
+
+  // Fallback to browser SpeechSynthesis
+  if ('speechSynthesis' in window) {
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(text);
+    utterance.lang = langCode;
+    window.speechSynthesis.speak(utterance);
+    return true;
+  }
+  return false;
+}
+
+function say(k, o = {}) {
+  const langVal = $('#lg').value;
+  const langCode = langVal.slice(0, 2);
+  const textTemplate = (R[k] && (R[k][langCode] || R[k].en)) || R.no.en;
+  const message = textTemplate.replace(/\{(\w)\}/g, (_, x) => o[x] ?? '');
+
+  $('#log').innerHTML += `<br><b>${message}</b>`;
+  playLinguisticAudio(message, langVal);
+}
+
+
+function handle(tx) {
+  $('#log').innerHTML = `“${tx}”`;
+
+  // 1. Sample load command
+  if (RX.s.test(tx)) {
+    loadSample(true);
+    return say('ld', { n: S.length });
+  }
+
+  // Auto-load sample if user commands action on empty state
+  if (!S.length && !loadSample(true)) return;
+
+  // 2. Navigation commands
+  if (RX.e.test(tx)) {
+    go('v5');
+    return say('ev');
+  }
+
+  if (RX.sc.test(tx)) {
+    go('v3');
+    return say('sc', { p: score });
+  }
+
+  // 3. Action commands (Cancel, Keep, Upgrade)
+  const actionKey = RX.u.test(tx) ? 'u' : RX.c.test(tx) ? 'c' : RX.k.test(tx) ? 'k' : null;
+  if (actionKey) {
+    // Find matching subscription by name regex or currently selected or first unreviewed
+    const targetSub = S.find(x => {
+      const known = KNOWN_SERVICES[x.id];
+      if (known && known.rx.test(tx)) return true;
+      return new RegExp(x.name, 'i').test(tx);
+    }) || S.find(x => x.id === sel && !x.d) || S.find(x => !x.d);
+
+    if (!targetSub) return say('sc', { p: score });
+    if (view !== 'v3') go('v3');
+
+    if (targetSub.d) {
+      toast(`${targetSub.name} was already reviewed`);
+      return say('sc', { p: score });
+    }
+
+    if (actionKey === 'u' && PL[targetSub.id]) {
+      openUpModal(targetSub.id);
+      return say('uo', { m: targetSub.name });
+    }
+
+    const earned = decide(targetSub.id, actionKey);
+    return say(actionKey, { m: targetSub.name, p: earned });
+  }
+
+  // 4. Total spend query
+  if (RX.t.test(tx)) {
+    go('v3');
+    const tot = S.reduce((acc, s) => acc + s.yr, 0);
+    return say('tot', { a: fmt(tot), n: S.length });
+  }
+
+  say('no');
+}
+
+function listen() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if (!SR) {
+    $('#log').textContent = 'Web Speech Recognition is not supported in this browser. You can type commands below.';
+    return;
+  }
+
+  rec = new SR();
+  rec.lang = $('#lg').value;
+  $('#lm').classList.add('on');
+  $('#log').textContent = 'Listening for your command…';
+
+  rec.onresult = e => {
+    const transcript = e.results[0][0].transcript;
+    handle(transcript);
+  };
+  rec.onerror = e => {
+    $('#log').textContent = 'Could not hear that. Check microphone permissions or type instead.';
+  };
+  rec.onend = () => {
+    $('#lm').classList.remove('on');
+  };
+  rec.start();
+}
+
+function submitTypedCommand() {
+  const input = $('#ti');
+  const val = input.value.trim();
+  if (val) {
+    handle(val);
+    input.value = '';
+  }
+}
+
+function toggleVoiceBar() {
+  const vb = $('#vb');
+  vb.classList.toggle('on');
+  if (vb.classList.contains('on')) {
+    $('#ti').focus();
+  }
+}
+
+/* ==========================================================================
+   THEME SWITCHER & KEYBOARD SHORTCUTS
+   ========================================================================== */
+
+const SVG_SUN = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+const SVG_MOON = '<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M20 14.5A8 8 0 019.5 4a8 8 0 1010.5 10.5z"/></svg>';
+
+const currentTheme = () => document.documentElement.dataset.theme || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+
+function renderThemeIcon() {
+  const isDark = currentTheme() === 'dark';
+  $('#tg').innerHTML = isDark ? SVG_SUN : SVG_MOON;
+  $('#tg').title = isDark ? 'Switch to light mode' : 'Switch to dark mode';
+}
+
+function theme() {
+  const next = currentTheme() === 'dark' ? 'light' : 'dark';
+  document.documentElement.dataset.theme = next;
+  try { localStorage.setItem('sk-theme', next); } catch (e) {}
+  renderThemeIcon();
+}
+
+try {
+  const saved = localStorage.getItem('sk-theme');
+  if (saved) document.documentElement.dataset.theme = saved;
+} catch (e) {}
+
+renderThemeIcon();
+
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    closeD();
+    closeUpModal();
+    closePasteModal();
+    $('#vb').classList.remove('on');
+  }
+});
+</script>
+</body>
+</html>
