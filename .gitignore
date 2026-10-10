@@ -1,13 +1,23 @@
-<<<<<<< HEAD
+# Environment variables & Secrets
+.env
+.env.*
+!.env.example
+
+# Databases
+*.db
+*.sqlite
+*.sqlite3
+
+# Dependencies & Environments
+.venv/
+node_modules/
+
+# Build artifacts & Python cache
+dist/
 __pycache__/
 *.py[cod]
-.venv/
-.env
-*.db
 uploads/
-node_modules/
-.venv/
-=======
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[codz]
